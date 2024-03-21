@@ -11,7 +11,7 @@ const UserNameMenu = () => {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center px-3 font-bold hover:text-oramge-500 gap-2">
+            <DropdownMenuTrigger className="flex items-center px-3 font-bold hover:text-orange-500 gap-2">
                 <CircleUserRound className="text-orange-500" />
                 {user?.email}
             </DropdownMenuTrigger>
@@ -23,7 +23,7 @@ const UserNameMenu = () => {
                </DropdownMenuItem>
                <Separator />
                <DropdownMenuItem>
-                    <Button onClick={() => logout()} className="flex flxe-1 font-bold bg-orange-500">
+                    <Button onClick={() => logout()} className="flex flex-1 font-bold bg-orange-500">
                         Log out 
                     </Button>
                 </DropdownMenuItem> 
