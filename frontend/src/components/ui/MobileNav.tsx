@@ -1,9 +1,12 @@
-import { Menu } from "lucide-react";
+import { CircleUserRound, Menu } from "lucide-react";
 import {Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger} from "./sheet";
 import { Separator } from "@radix-ui/react-separator";
 import { Button } from "./button";
+import { useAuth0 } from "@auth0/auth0-react";
+import MobileNavLinks from "./MobileNavLInks";
 
 const MobileNav = () => {
+  const { isAuthenticated, loginWithRedirect, user } = useAuth0();
   return (
       <Sheet>
         <SheetTrigger>
@@ -11,13 +14,25 @@ const MobileNav = () => {
         </SheetTrigger>
         <SheetContent className="space-y-3">
           <SheetTitle>
-              <span> Welcome to QuickBites.com!</span>
+            {isAuthenticated ? (
+              <span className="flex items-center font-bold gap-2">
+                <CircleUserRound className="text-orange-500" />
+                {user?.email}
+              </span> 
+              ) : (
+                 <span> Welcome to QuickBites.com!</span>
+                )}
           </SheetTitle>
           <Separator />
-          <SheetDescription className="flex">
-              <Button  className="flex-1 font-bold bg-orange-500">
+          <SheetDescription className="flex flex-col gap-4">
+            {isAuthenticated ? (
+              <MobileNavLinks />
+            ) : (
+              <Button onClick={ () => loginWithRedirect()} 
+              className="flex-1 font-bold bg-orange-500">
                 Log In
               </Button>
+            )}
           </SheetDescription>
         </SheetContent>
       </Sheet>
