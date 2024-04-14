@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver} from "@hookform/resolvers/zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import LoadingButton from "@/components/LOadingButton";
+import LoadingButton from "@/components/LoadingButton";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const formSchema = z.object({
     email: z.string().optional(),
@@ -15,10 +16,10 @@ const formSchema = z.object({
 
 });
 
-type UserFormData = z.infer<typeof formSchema>;
+export type UserFormData = z.infer<typeof formSchema>;
 
 type Props = { 
-    onSave: (userPrfileData: UserFormData) => void;
+    onSave: (userProfileData: UserFormData) => void;
     isLoading: boolean;
 };
 
@@ -27,13 +28,23 @@ const UserProfileForm = ({ onSave, isLoading}: Props) => {
         resolver: zodResolver(formSchema),
     });
 
+    const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission
+
+    const onSubmit = async (data: UserFormData) => {
+        setIsSubmitting(true); // Set loading state to true when form is being submitted
+        // Call onSave function to submit data to the database
+        onSave(data);
+        // After submission is complete, reset loading state
+        setIsSubmitting(false);
+    };
+
     return(
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSave)} className="space-y-4 bg-gray-50 rounded-lg md:p-10">
                 <div>
                     <h2 className="text-2xl font-bold" > User Profile Form</h2>
                     <FormDescription>
-                        View and change your profile indormation here
+                        View and change your profile information here
                     </FormDescription>
                 </div>
                 <FormField 
@@ -57,6 +68,7 @@ const UserProfileForm = ({ onSave, isLoading}: Props) => {
                             <FormControl>
                                 <Input {...field} className="bg-white"/>
                             </FormControl>
+                            <FormMessage />
                         </FormItem>
                  )}/>
 
@@ -70,6 +82,7 @@ const UserProfileForm = ({ onSave, isLoading}: Props) => {
                             <FormControl>
                                 <Input {...field} className="bg-white"/>
                             </FormControl>
+                            <FormMessage />
                         </FormItem>
                  )}/>
                  <FormField 
@@ -81,6 +94,7 @@ const UserProfileForm = ({ onSave, isLoading}: Props) => {
                             <FormControl>
                                 <Input {...field} className="bg-white"/>
                             </FormControl>
+                            <FormMessage />
                         </FormItem>
                  )}/>
                  <FormField 
@@ -93,9 +107,10 @@ const UserProfileForm = ({ onSave, isLoading}: Props) => {
                                 <Input {...field} className="bg-white"/>
                             </FormControl>
                         </FormItem>
-                 )}/>
+                 )}
+                 />
                     </div> 
-                    {isLoading ? (
+                    {isSubmitting ? (
                     <LoadingButton /> 
                     ) : (
                          <Button type="submit" className="bg-orange-500">Submit</Button>
@@ -103,7 +118,6 @@ const UserProfileForm = ({ onSave, isLoading}: Props) => {
             </form>
         </Form>
     );
-
 };
 
 export default UserProfileForm;
